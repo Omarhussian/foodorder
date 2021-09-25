@@ -1,10 +1,9 @@
 .cart-items {
-    list-style: none;
+    list-style:upper-alpha;
     margin: 10px;
     padding: 0;
     max-height: 20rem;
     overflow: auto;
-
   }
   
   .total {

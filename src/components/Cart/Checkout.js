@@ -1,33 +1,79 @@
-import React from "react";
-import styles from "./Checkout.module.css";
-const confirmHandler = (event) => {
-  event.preventDefault();
-};
+import classes from "./Checkout.module.css";
+import { useRef, useState } from "react";
+
+const isEmpty = (value) => value.trim() === "";
+const isFiveChars = (value) => value.trim().length === 5;
 
 const Checkout = (props) => {
+  const [formInputsValidity, setFormInputsValidity] = useState({
+    name: true,
+    street: true,
+    city: true,
+    postalCode: true,
+  });
+  const nameInputRef = useRef();
+  const streetInputRef = useRef();
+  const postalCodeRef = useRef();
+  const cityInputRef = useRef();
+  const confirmHandler = (event) => {
+    event.preventDefault();
+    const enteredName = nameInputRef.current.value;
+    const enteredStreet = streetInputRef.current.value;
+    const enteredPostal = postalCodeRef.current.value;
+    const enteredCity = cityInputRef.current.value;
+
+    const enteredNameIsValid = !isEmpty(enteredName);
+    const enteredStreetIsValid = !isEmpty(enteredStreet);
+    const enteredCityIsValid = !isEmpty(enteredCity);
+    const enteredPostalIsValid = isFiveChars(enteredPostal);
+    setFormInputsValidity({
+      name: enteredNameIsValid,
+      street: enteredStreetIsValid,
+      city: enteredCityIsValid,
+      postCode: enteredPostalIsValid,
+    });
+    const formIsValid =
+      enteredNameIsValid &&
+      enteredStreetIsValid &&
+      enteredCityIsValid &&
+      enteredPostalIsValid;
+    if (!formIsValid) {
+      return;
+    }
+  };
+
   return (
-    <form onSubmit={confirmHandler}>
-      <div className={styles.control}>
+    <form className={classes.form} onSubmit={confirmHandler}>
+      <div className={classes.control}>
         <label htmlFor="name">Your Name</label>
-        <input type="text" id="name" />
+        <input type="text" id="name" ref={nameInputRef} />
+        {!formInputsValidity.name && <p>Please enter a Valid Name :)</p>}
       </div>
-      <div className={styles.control}>
+      <div className={classes.control}>
         <label htmlFor="street">Street</label>
-        <input type="text" id="street" />
+        <input type="text" id="street" ref={streetInputRef} />
+        {!formInputsValidity.street && <p>Please enter a Valid Street</p>}
       </div>
-      <div className={styles.control}>
+      <div className={classes.control}>
         <label htmlFor="postal">Postal Code</label>
-        <input type="text" id="postal" />
+        <input type="text" id="postal" ref={postalCodeRef} />
+        {!formInputsValidity.postalCode && <p>Please enter a Valid postalCode (5 Chars Minmum) </p>}
+
       </div>
-      <div className={styles.control}>
+      <div className={classes.control}>
         <label htmlFor="city">City</label>
-        <input type="text" id="city" />
+        <input type="text" id="city" ref={cityInputRef} />
+        {!formInputsValidity.street && <p>Please enter a Valid city</p>}
+
       </div>
-      <button type="button" onClick={props.onCancel}>
-        Cancel!
-      </button>
-      <button>Confirm</button>
+      <div className={classes.actions}>
+        <button type="button" onClick={props.onCancel}>
+          Cancel
+        </button>
+        <button className={classes.submit}>Confirm</button>
+      </div>
     </form>
   );
 };
+
 export default Checkout;

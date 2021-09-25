@@ -16,7 +16,11 @@ const Cart = (props) => {
     cartCtx.addItem({ ...item, amount: 1 });
   };
   const orderHandler = () => {
-    setIsCheckout(true)
+    setIsCheckout(true);
+  };
+  const submitOrderHandler = (userData) => {
+
+
   };
   const cartItems = (
     <ul className={classes["cart-items"]}>
@@ -32,16 +36,18 @@ const Cart = (props) => {
       ))}
     </ul>
   );
-  const modalActions =  <div className={classes.actions}>
-  <button className={classes["button--alt"]} onClick={props.onHideCart}>
-    Close
-  </button>
-  {hasItems && (
-    <button className={classes.butotn} onClick={orderHandler}>
-      Order!
-    </button>
-  )}
-</div>
+  const modalActions = (
+    <div className={classes.actions}>
+      <button className={classes["button--alt"]} onClick={props.onHideCart}>
+        Close
+      </button>
+      {hasItems && (
+        <button className={classes.butotn} onClick={orderHandler}>
+          Order!
+        </button>
+      )}
+    </div>
+  );
   return (
     <Modal onHideCart={props.onHideCart}>
       {cartItems}
@@ -49,8 +55,8 @@ const Cart = (props) => {
         <span>total amount</span>
         <span>{totalAmount}</span>
       </div>
-     {isCheckout && <Checkout onCancel={props.onHideCart} />}
-     {!isCheckout && modalActions}
+      {isCheckout && <Checkout onConfirm={submitOrderHandler} onCancel={props.onHideCart} />}
+      {!isCheckout && modalActions}
     </Modal>
   );
 };
